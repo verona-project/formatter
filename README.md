@@ -140,3 +140,30 @@ Large-input testing also prompted Foundation improvements: Data can reserve
 capacity without changing its length, and byte/array copies, Data zero-fill and
 equality, and UTF-8 validation use bounded-depth traversal. Their existing tests
 and additional reserve/Unicode regression tests run through `make test-foundation`.
+
+## Standalone checkout
+
+The formatter depends on Base, Foundation, and libc. Place their source checkouts
+beside this repository as `base/`, `foundation/`, and `libc/`. The Verona unit
+tests also require a sibling `testing/` checkout. With a compatible Verona
+compiler on your PATH, run from this repository:
+
+```sh
+verona build verona-fmt ./build
+verona build formatter-tests ./build
+./build/formatter-tests
+```
+
+The Make commands above run from the main Verona repository, where this package
+is pinned at `projects/formatter`. The Lisp integration runner uses that checkout's
+compiler reader and source corpus; run `make test-formatter` there using its
+pinned Nix development environment.
+
+Public clones use HTTPS. To push formatter changes over SSH:
+
+```sh
+git remote set-url --push origin git@github.com:verona-project/formatter.git
+```
+
+Commit and push changes here before updating Verona's submodule reference.
+Released under the Unlicense; see `LICENSE`.
