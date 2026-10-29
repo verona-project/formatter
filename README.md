@@ -69,9 +69,8 @@ For example:
 
 ## Architecture and library API
 
-Base remains unchanged while direct operator dispatch is deferred for review.
-The formatter uses the temporary `foundation.compat.arithmetic` and
-`foundation.compat.signed_arithmetic` shims provided by the Foundation project.
+The formatter calls existing arithmetic and comparison operators directly.
+Typed constants and local bindings provide explicit operand types where needed.
 
 All formatting algorithms are Verona code. Foundation provides checked storage,
 Data, Array specialization, UTF-8 validation, and a segmented arena. Existing

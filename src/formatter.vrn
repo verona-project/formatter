@@ -1,7 +1,5 @@
 (import base)
 (import allocator)
-(import foundation.compat.arithmetic)
-(import foundation.compat.arithmetic :as n)
 (import array)
 (import arena)
 (import data)
@@ -11,6 +9,10 @@
 (import formatter.lexer :as lexer)
 (import formatter.parser :as parser)
 (import formatter.layout :as layout)
+
+(base:constant u64-20 u64 20)
+(base:constant u64-240 u64 240)
+(base:constant u64-16777216 u64 16777216)
 
 ; Transactional output: failures leave an existing destination unchanged.
 ; Source may borrow the destination, since all rendering precedes the commit.
@@ -35,13 +37,13 @@
 
 (base:function format
   ((source data:view) (width u64) (out (pointer data:data)) (backing allocator:backend)) m:status
-  (match (n:lt width 20)
+  (match (< width u64-20)
     (true (m:limit 0 "width must be between 20 and 240"))
     (false
-      (match (n:gt width 240)
+      (match (> width u64-240)
         (true (m:limit 0 "width must be between 20 and 240"))
         (false
-          (match (n:gt (field source length) 16777216)
+          (match (> (field source length) u64-16777216)
             (true (m:limit 0 "input limit (16 MiB) exceeded"))
             (false
               (match (string:validate source)
