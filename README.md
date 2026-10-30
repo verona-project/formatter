@@ -1,5 +1,7 @@
 # Verona formatter
 
+File I/O uses `libc.errno:errno-pointer` and `libc.constants:EINTR` to retry interrupted operations.
+
 `verona-fmt` is a source formatter written in Verona and built on Foundation.
 The default `make build` builds it, and `make install` installs it alongside
 `verona`, `verona-project`, and `verona-server`.
