@@ -5,9 +5,8 @@
 (import formatter.model)
 (import formatter.model :as m)
 
-; Character limits follow Base’s ASCII character domain.
-(base:function ascii-maximum () u64
-  (let ((last char (base:maxBound))) last))
+; ASCII ends at byte 127, within the u8 storage range.
+(base:constant ascii-limit u64 127)
 
 (base:function whitespace ((byte u64)) bool
   (match byte (32 true) (9 true) (10 true) (13 true) (_ false)))
@@ -80,7 +79,7 @@
               (92 (string-advance context (n:add i 2) false))
               (_ (m:syntax i "unsupported string escape"))))))
       (_
-        (match (n:gt (m:byte source i) (ascii-maximum))
+        (match (n:gt (m:byte source i) ascii-limit)
           (true (m:syntax i "Verona string literals must be ASCII"))
           (false (string-advance context (n:add i 1) false)))))))
 
@@ -152,7 +151,7 @@
               (let ((end u64 (atom-end source (n:add first 1))) (size u64 (n:sub end first)))
                 (match
                   (match (n:eq size 1)
-                    (true (n:le (m:byte source first) (ascii-maximum)))
+                    (true (n:le (m:byte source first) ascii-limit))
                     (false (named-character source first size)))
                   (false (tuple (m:syntax start "invalid character literal") end))
                   (true (tuple (append-token source items 7 start end fresh) end))))))))
